@@ -4,6 +4,9 @@ void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+
+  String string  = "Text from my app";
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -20,7 +23,8 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Flutter Demo'),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -45,6 +49,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  GlobalKey textKey = GlobalKey();
+  GlobalKey buttonKey = GlobalKey();
 
   void _incrementCounter() {
     setState(() {
@@ -55,6 +61,16 @@ class _MyHomePageState extends State<MyHomePage> {
       // called again, and so nothing would appear to happen.
       _counter++;
     });
+    RenderBox renderText = textKey.currentContext.findRenderObject();
+    RenderBox renderButton = buttonKey.currentContext.findRenderObject();
+    
+    print(renderText.localToGlobal(Offset.zero));
+    print(renderText.size);
+    print(renderButton.localToGlobal(Offset.zero));
+    print(renderButton.size);
+
+    MyApp myApp = buttonKey.currentContext.ancestorWidgetOfExactType(MyApp);
+    print(myApp.string);
   }
 
   @override
@@ -96,6 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Text(
               '$_counter',
+              key: textKey,
               style: Theme.of(context).textTheme.display1,
             ),
           ],
@@ -103,6 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
+        key: buttonKey,
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
